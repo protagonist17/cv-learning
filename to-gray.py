@@ -3,11 +3,13 @@ import numpy as np  #导入NUMPY库并给它起个别名叫NP,NP擅长处理“�
 
 
 img_path = r'D:/OneDrive/桌面/主角太想进步了/20260422.png'
+img_data = np.fromfile(img_path,dtype=np.uint8)
+img = cv2.imdecode(img_data, cv2.IMREAD_COLOR)
 
 #把图片的完整路径存到一个变量里，前面的r是原始字符串，告诉PYTHON不要对路径里的\做任何转义处理
 # 使用 numpy 从文件读取二进制数据，再用 OpenCV 解码
 
-img = cv2.imdecode(np.fromfile(img_path, dtype=np.uint8), cv2.IMREAD_COLOR)
+#img = cv2.imdecode(np.fromfile(img_path, dtype=np.uint8), cv2.IMREAD_COLOR)
 
 
 #img_data = np.fromfile(img_path, dtype=np.uint8)
@@ -16,16 +18,23 @@ img = cv2.imdecode(np.fromfile(img_path, dtype=np.uint8), cv2.IMREAD_COLOR)
 
 
 if img is None:
-    print("❌ 读取失败，请检查路径或文件格式")
+    print("❌ 读取失败")
 else:
     #检查图片是否读取成功，条件判断，错误处理
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    #gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    h,w = img.shape[:2]
+    print(f"原始尺寸:宽{w} x 高{h}")
+
+    cropped = img[0:h//2,0:w//2]
+
+    output_path = r'D:/OneDrive/桌面/主角太想进步了/cropped_image.png'
 
     # 保存时同样使用 imencode 以支持中文路径
     #COLOR_BGR2GRAY 是 OpenCV 内置的转换代码
     #将读取成功的彩色图片 img，转换成灰度图
 
-    cv2.imencode('.png', gray)[1].tofile(r'D:/OneDrive/桌面/主角太想进步了/gray_image.png')
+    cv2.imencode('.png', cropped)[1].tofile(r'D:/OneDrive/桌面/主角太想进步了/cropped_image.png')
+    #cv2.imencode('.png', gray)[1].tofile(r'D:/OneDrive/桌面/主角太想进步了/gray_image.png')
     #cv2.imencode('.png', gray)[1].tofile(...)
     #保存图片的“镜像操作”
     #mencode 把处理好的灰度图 gray 重新编码成 .png 格式的字节流，[1] 是取编码后的数据部分。
